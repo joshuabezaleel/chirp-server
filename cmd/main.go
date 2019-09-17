@@ -8,9 +8,9 @@ import (
 
 	_ "github.com/lib/pq"
 
-	"github.com/joshuabezaleel/library-server/database"
-	"github.com/joshuabezaleel/library-server/pkg/core/user"
-	"github.com/joshuabezaleel/library-server/server"
+	"github.com/joshuabezaleel/chirp-server/database"
+	"github.com/joshuabezaleel/chirp-server/pkg/core/user"
+	"github.com/joshuabezaleel/chirp-server/server"
 )
 
 const (
@@ -26,7 +26,7 @@ func main() {
 	connectionString := fmt.Sprintf("host = %s port=%d user=%s password=%s dbname=%s sslmode=disable", connhost, connport, connusername, connpassword, dbname)
 	db, err := sql.Open("postgres", connectionString)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 	defer db.Close()
 
@@ -46,6 +46,6 @@ func main() {
 
 	err = http.ListenAndServe(port, srv.Router)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
 	}
 }

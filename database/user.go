@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"time"
 
-	user "github.com/joshuabezaleel/library-server/pkg/core/user"
+	user "github.com/joshuabezaleel/chirp-server/pkg/core/user"
 )
 
 type repository struct {
