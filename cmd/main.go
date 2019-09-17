@@ -19,7 +19,7 @@ const (
 	connport     = 8081
 	connusername = "postgres"
 	connpassword = "postgres"
-	dbname       = "test1"
+	dbname       = "library-17-9"
 )
 
 func main() {

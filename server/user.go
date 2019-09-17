@@ -14,15 +14,6 @@ type userHandler struct {
 	service user.Service
 }
 
-// func (handler *userHandler) router() *mux.Router {
-// 	root := mux.NewRouter()
-// 	router := root.PathPrefix("/user").Subrouter()
-
-// 	router.HandleFunc("/register", handler.registerUser).Methods("POST")
-
-// 	return root
-// }
-
 func (handler *userHandler) RegisterRouter(router *mux.Router) {
 	router.HandleFunc("/register", handler.registerUser).Methods("POST")
 }
@@ -31,7 +22,10 @@ func (handler *userHandler) registerUser(w http.ResponseWriter, r *http.Request)
 	// ctx := context.Background()
 
 	var request struct {
-		Username string
+		Username string `json:"username"`
+		Email    string `json:"email"`
+		Password string `json:"password"`
+		Role     string `json:"role"`
 	}
 
 	err := json.NewDecoder(r.Body).Decode(&request)
@@ -41,7 +35,7 @@ func (handler *userHandler) registerUser(w http.ResponseWriter, r *http.Request)
 	}
 	defer r.Body.Close()
 
-	err = handler.service.RegisterUser(request.Username)
+	err = handler.service.RegisterUser(request.Username, request.Email, request.Password, request.Role)
 	if err != nil {
 		log.Fatal(err)
 		return

@@ -15,7 +15,7 @@ var ErrInvalidArgument = errors.New("Invalid argument")
 
 // Service provides basic operations on user domain model.
 type Service interface {
-	RegisterUser(username string) error
+	RegisterUser(username, email, password, role string) error
 }
 
 type service struct {
@@ -30,12 +30,12 @@ func NewService(user Repository) Service {
 }
 
 // AddUser register a new user.
-func (s *service) RegisterUser(username string) error {
+func (s *service) RegisterUser(username, email, password, role string) error {
 	if len(username) == 0 {
 		return ErrInvalidArgument
 	}
 
-	user := NewUser(username)
+	user := NewUser(username, email, password, role)
 
 	return s.user.Create(user)
 }
