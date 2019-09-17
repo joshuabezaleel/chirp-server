@@ -4,8 +4,8 @@ import (
 	"errors"
 )
 
-// ErrDuplicate is used when a user already exists.
-var ErrDuplicate = errors.New("User already exists")
+// ErrDuplicate is used when a user with particular username/email already exists.
+var ErrDuplicate = errors.New("User with username/email already exists")
 
 // ErrWrongAuth is used when a user input a wrong combination of username/email and password.
 var ErrWrongAuth = errors.New("Wrong combination of username/email and password")
