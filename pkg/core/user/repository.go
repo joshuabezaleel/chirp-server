@@ -1,6 +1,6 @@
 package user
 
-// Repository provides access to user store.
+// Repository provides access to the user store.
 type Repository interface {
 	Create(user *User) error
 	// FindByID(id int) (*User, error)

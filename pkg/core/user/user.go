@@ -11,7 +11,7 @@ type User struct {
 	RegisterAt time.Time `json:"registerAt"`
 }
 
-// NewUser creates a new instance of user without its ID.
+// NewUser creates a new instance of user.
 func NewUser(username, email, password, role string) *User {
 	return &User{
 		Username: username,
