@@ -16,6 +16,7 @@ type userHandler struct {
 
 func (handler *userHandler) registerRouter(router *mux.Router) {
 	router.HandleFunc("/register", handler.registerUser).Methods("POST")
+	router.HandleFunc("/login", handler.loginUser).Methods("POST")
 }
 
 func (handler *userHandler) registerUser(w http.ResponseWriter, r *http.Request) {
@@ -42,4 +43,18 @@ func (handler *userHandler) registerUser(w http.ResponseWriter, r *http.Request)
 
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	json.NewEncoder(w).Encode("New user registered.")
+}
+
+func (handler *userHandler) loginUser(w http.ResponseWriter, r *http.Request) {
+	var request struct {
+		Username string `json:"username"`
+		Password string `json:"password"`
+	}
+
+	err := json.NewDecoder(r.Body).Decode(&request)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
 }
