@@ -9,6 +9,7 @@ import (
 	_ "github.com/lib/pq"
 
 	"github.com/joshuabezaleel/chirp-server/database"
+	"github.com/joshuabezaleel/chirp-server/pkg/core/chirp"
 	"github.com/joshuabezaleel/chirp-server/pkg/core/user"
 	"github.com/joshuabezaleel/chirp-server/server"
 )
@@ -19,7 +20,7 @@ const (
 	connport     = 8081
 	connusername = "postgres"
 	connpassword = "postgres"
-	dbname       = "library-17-9"
+	dbname       = "chirp-server-18-9"
 )
 
 func main() {
@@ -32,17 +33,21 @@ func main() {
 
 	// Setting up domain repositories
 	var (
-		userRepo user.Repository
+		userRepo  user.Repository
+		chirpRepo chirp.Repository
 	)
-	userRepo = database.NewRepository(db)
+	userRepo = database.NewUserRepository(db)
+	chirpRepo = database.NewChirpRepository(db)
 
 	// Setting up domain services
 	var (
-		userService user.Service
+		userService  user.Service
+		chirpService chirp.Service
 	)
 	userService = user.NewService(userRepo)
+	chirpService = chirp.NewService(chirpRepo)
 
-	srv := server.New(userService)
+	srv := server.New(userService, chirpService)
 
 	err = http.ListenAndServe(port, srv.Router)
 	if err != nil {

@@ -2,6 +2,10 @@ package user
 
 import (
 	"errors"
+	"log"
+	"time"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 // ErrDuplicate is used when a user with particular username/email already exists.
@@ -29,13 +33,22 @@ func NewService(user Repository) Service {
 	}
 }
 
-// AddUser register a new user.
+// RegisterUser register a new user.
 func (s *service) RegisterUser(username, email, password, role string) error {
 	if len(username) == 0 {
 		return ErrInvalidArgument
 	}
 
-	user := NewUser(username, email, password, role)
+	user := NewUser(username, email, s.hashAndSalt([]byte(password)), role, time.Now())
 
 	return s.user.Create(user)
+}
+
+func (s *service) hashAndSalt(pwd []byte) string {
+	hash, err := bcrypt.GenerateFromPassword(pwd, bcrypt.MinCost)
+	if err != nil {
+		log.Println(err)
+	}
+
+	return string(hash)
 }

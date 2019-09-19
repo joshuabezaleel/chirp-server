@@ -4,20 +4,22 @@ import "time"
 
 // User defines a user.
 type User struct {
-	Username   string    `json:"username"`
-	Email      string    `json:"email"`
-	Password   string    `json:"password"`
-	Role       string    `json:"role"`
-	RegisterAt time.Time `json:"registerAt"`
+	ID           int       `json:"id"`
+	Username     string    `json:"username"`
+	Email        string    `json:"email"`
+	Password     string    `json:"password"`
+	Role         string    `json:"role"`
+	RegisteredAt time.Time `json:"registeredAt"`
 }
 
 // NewUser creates a new instance of user.
-func NewUser(username, email, password, role string) *User {
+func NewUser(username, email, password, role string, registeredAt time.Time) *User {
 	return &User{
-		Username: username,
-		Email:    email,
-		Password: password,
-		Role:     role,
+		Username:     username,
+		Email:        email,
+		Password:     password,
+		Role:         role,
+		RegisteredAt: registeredAt,
 	}
 }
 
