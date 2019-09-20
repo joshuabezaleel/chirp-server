@@ -2,9 +2,11 @@ package server
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
+	"time"
+
+	"github.com/dgrijalva/jwt-go"
 
 	"github.com/gorilla/mux"
 	"github.com/joshuabezaleel/chirp-server/pkg/auth"
@@ -39,9 +41,21 @@ func (handler *authHandler) login(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		respondWithError(w, http.StatusUnauthorized, "Password is wrong")
 		return
-	} else {
-		fmt.Println("Same password!")
+	}
+	expirationTime := time.Now().Add(5 * time.Minute).Unix()
+	claims := &auth.Claims{
+		Username: request.Username,
+		StandardClaims: jwt.StandardClaims{
+			Issuer:    "Chirp Server",
+			ExpiresAt: expirationTime,
+		},
+	}
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	tokenString, err := token.SignedString(auth.SecretKey)
+	if err != nil {
+		respondWithError(w, http.StatusInternalServerError, "Error issuing token.")
+		return
 	}
 
-	fmt.Println(storedPassword)
+	respondWithJSON(w, http.StatusOK, tokenString)
 }

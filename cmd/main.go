@@ -6,6 +6,8 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/joshuabezaleel/chirp-server/pkg/feed"
+
 	"github.com/joshuabezaleel/chirp-server/pkg/auth"
 
 	_ "github.com/lib/pq"
@@ -38,22 +40,26 @@ func main() {
 		userRepo  user.Repository
 		chirpRepo chirp.Repository
 		authRepo  auth.Repository
+		feedRepo  feed.Repository
 	)
 	userRepo = database.NewUserRepository(db)
 	chirpRepo = database.NewChirpRepository(db)
 	authRepo = database.NewAuthRepository(db)
+	feedRepo = database.NewFeedRepository(db)
 
 	// Setting up domain services
 	var (
 		userService  user.Service
 		chirpService chirp.Service
 		authService  auth.Service
+		feedService  feed.Service
 	)
 	userService = user.NewService(userRepo)
 	chirpService = chirp.NewService(chirpRepo)
 	authService = auth.NewService(authRepo)
+	feedService = feed.NewService(feedRepo)
 
-	srv := server.New(userService, chirpService, authService)
+	srv := server.New(userService, chirpService, authService, feedService)
 
 	err = http.ListenAndServe(port, srv.Router)
 	if err != nil {

@@ -17,16 +17,14 @@ func NewAuthRepository(DB *sql.DB) auth.Repository {
 	}
 }
 
-func (repo *authRepository) GetPasswordByUsername(username string) (string, error) {
+func (repo *authRepository) GetPassword(username string) (string, error) {
 	var password string
-	// fmt.Println(password)
 
 	res := repo.DB.QueryRow("SELECT password FROM users WHERE username=$1", username)
 	err := res.Scan(&password)
 	if err != nil {
 		return "", err
 	}
-	// fmt.Println(password)
 
 	return password, nil
 }

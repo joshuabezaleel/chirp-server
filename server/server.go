@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"net/http"
 
+	"github.com/joshuabezaleel/chirp-server/pkg/feed"
+
 	"github.com/joshuabezaleel/chirp-server/pkg/auth"
 
 	"github.com/gorilla/mux"
@@ -16,26 +18,30 @@ type Server struct {
 	User  user.Service
 	Chirp chirp.Service
 	Auth  auth.Service
+	Feed  feed.Service
 
 	Router *mux.Router
 }
 
 // New returns a new HTTP server.
-func New(user user.Service, chirp chirp.Service, auth auth.Service) *Server {
+func New(user user.Service, chirp chirp.Service, auth auth.Service, feed feed.Service) *Server {
 	server := &Server{
 		User:  user,
 		Chirp: chirp,
 		Auth:  auth,
+		Feed:  feed,
 	}
 
 	router := mux.NewRouter()
 	uh := userHandler{user}
 	ch := chirpHandler{chirp}
 	ah := authHandler{auth}
+	fh := feedHandler{feed, auth}
 
 	uh.registerRouter(router.PathPrefix("/users").Subrouter())
 	ch.registerRouter(router.PathPrefix("/chirps").Subrouter())
 	ah.registerRouter(router.PathPrefix("/auth").Subrouter())
+	fh.registerRouter(router.PathPrefix("/feed").Subrouter())
 
 	server.Router = router
 
